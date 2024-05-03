@@ -10,7 +10,6 @@ import (
 ) 
 const apiUrl = "https://api.quotable.io/random"
 type Quote struct {
-    id   string `json:""`
    Content string `json:"content"`
    Author string `json:"author"`
 }
