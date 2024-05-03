@@ -1,6 +1,6 @@
 ![logo](imgs/logo.png)
 
-<b><p text-align="center">GoInspiredz</p></b>
+<b><h1 text-align="center">GoInspiredz</h1></b>
 Go!Inspired is a simple terminal utility that fetches inspirational quotes and prints them in your terminal
 #### Usage
 If you just execute goinspired without any flags it will just print a random quote, currently you can only choose how many quotes you can print
