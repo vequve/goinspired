@@ -1,53 +1,47 @@
-package main 
+ package main 
 
 import (
     "fmt"
-    "io"
     "encoding/json"
     "net/http"
     "flag"
-    //"strconv"
+    "strconv"
 ) 
-const apiUrl = "https://api.quotable.io/random"
-type Quote struct {
-   Content string `json:"content"`
-   Author string `json:"author"`
+type Quote struct{
+    ID string `json:"_id"`
+    Content string `json:"content"`
+    Author string `json:"author"`
+    Tags []string `json:"tags"`
+
 }
 func main(){
     numN := flag.Int("n", 1, "Numbers of quotes");
     flag.Parse()
+    numNs := strconv.Itoa(*numN);
+    apiUrl :=  "https://api.quotable.io/quotes/random?limit="+numNs
     if *numN<1{
         fmt.Println("Number of quotes needs to be positive! ")
         
     }
-    for i:=0;i<*numN;i++{
-        quote()
-    }
+    quote(numN,apiUrl)    
   
 }
 
-func quote(){
+func quote(num *int, apiUrl string) error{
     response, err := http.Get(apiUrl)
     
     if err != nil{
-        fmt.Println(err)
-        return
+        return err
     }
     defer response.Body.Close()
-   
-    body, err := io.ReadAll(response.Body)  
-    if err != nil{
-        fmt.Println(err)
-        return
-    }
+    var quotedata []Quote 
     
-    var quotedata Quote
-
-    err = json.Unmarshal(body, &quotedata)
-    if err != nil{
-        fmt.Println(err)
-        return
+    if err := json.NewDecoder(response.Body).Decode(&quotedata); err!=nil{
+        return err
     }
-    fmt.Println(quotedata.Content)
-    fmt.Println("-",quotedata.Author) 
+    for i := 0;i<*num;i++{
+        fmt.Println(quotedata[i].Content)
+        fmt.Println("-",quotedata[i].Author) 
+    } 
+    return nil
 }
