@@ -1,4 +1,4 @@
- package main 
+package main 
 
 import (
     "fmt"
@@ -23,12 +23,17 @@ func main(){
     if *numN<1{
         fmt.Println("Number of quotes needs to be positive! ") 
     }
-    quote(numN,apiUrl)   
+    if *numN>50{
+        for  i:=0;i<*numN/50;i++{
+            quote(numN,apiUrl)
+        }
+    }else{
+       quote(numN,apiUrl)   
+    }
+   
 }
 
 func quote(num *int, apiUrl string) error{
-    if *num > 50{
-        for i :=0;i<*num/50;i++{
             response, err := http.Get(apiUrl)
     
             if err != nil{
@@ -49,25 +54,6 @@ func quote(num *int, apiUrl string) error{
                 }
       
             }
-        }
-    }else{
-        response, err := http.Get(apiUrl)
-    
-        if err != nil{
-            return err
-        }
-        defer response.Body.Close()
-        var quotedata []Quote 
-    
-        if err := json.NewDecoder(response.Body).Decode(&quotedata); err!=nil{
-            return err
-        }
-
-        for  j := 0;j<*num;j++{
-            fmt.Println(quotedata[j].Content)
-            fmt.Println("-",quotedata[j].Author)      
-        }
-
-    }
+     
     return nil
 }
